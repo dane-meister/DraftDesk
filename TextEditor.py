@@ -14,7 +14,7 @@ class TextEditor:
     def __init__(self):
         # Main window
         self.root = tk.Tk()
-        self.root.title("Text Editor")
+        self.root.title("DraftDesk")
         self.root.rowconfigure(0, minsize=800, weight=1)
         self.root.columnconfigure(1, minsize=800, weight=1)
 
@@ -32,6 +32,12 @@ class TextEditor:
         self.save_button.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
         self.open_button.grid(row=1, column=0, sticky="ew", padx=5)
         self.frame.grid(row=0, column=0, sticky="ns")
+
+        # Button hover effect
+        self.save_button.bind("<Enter>", lambda event: self.save_button.config(bg="lightblue"))
+        self.save_button.bind("<Leave>", lambda event: self.save_button.config(bg="SystemButtonFace"))
+        self.open_button.bind("<Enter>", lambda event: self.open_button.config(bg="lightblue"))
+        self.open_button.bind("<Leave>", lambda event: self.open_button.config(bg="SystemButtonFace"))
 
         # Keyboard shortcuts
         self.root.bind("<Control-s>", lambda x: self.save())
@@ -54,7 +60,7 @@ class TextEditor:
         with open(filepath, "w") as file:
             content = self.text_edit.get("1.0", tk.END)
             file.write(content)
-        self.root.title(f"Text Editor - {filepath}")
+        self.root.title(f"DraftDesk - {filepath.split('/')[-1]}")
     
 
     # Open file
@@ -68,7 +74,7 @@ class TextEditor:
             self.text_edit.delete("1.0", tk.END)
             self.text_edit.insert("1.0", content)
 
-        self.root.title(f"Text Editor - {filepath}")
+        self.root.title(f"DraftDesk - {filepath.split('/')[-1]}")
 
 
     # Spell check method
