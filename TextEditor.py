@@ -17,7 +17,7 @@ class TextEditor:
         self.root.title("DraftDesk")
         self.root.rowconfigure(0, minsize=800, weight=1)
         self.root.columnconfigure(1, minsize=800, weight=1)
-
+        
         # Text widget w/ scrolling
         self.text_edit = tk.Text(self.root, font=self.current_font, wrap=tk.WORD)
         self.text_edit.grid(row=0, column=1, sticky="nsew")
@@ -38,6 +38,11 @@ class TextEditor:
         self.save_button.bind("<Leave>", lambda event: self.save_button.config(bg="SystemButtonFace"))
         self.open_button.bind("<Enter>", lambda event: self.open_button.config(bg="lightblue"))
         self.open_button.bind("<Leave>", lambda event: self.open_button.config(bg="SystemButtonFace"))
+
+        # Scrollbar
+        self.scrollbar = tk.Scrollbar(self.root, command=self.text_edit.yview)
+        self.scrollbar.grid(row=0, column=2, sticky="ns")
+        self.text_edit.config(yscrollcommand=self.scrollbar.set)
 
         # Keyboard shortcuts
         self.root.bind("<Control-s>", lambda x: self.save())
