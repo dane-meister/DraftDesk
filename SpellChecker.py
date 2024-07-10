@@ -11,9 +11,6 @@ nltk.download('words')
 class SpellCheck:
 
     def __init__(self):
-        self.root = tk.Tk()
-        self.root.title("Spell Checker")
-        self.root.geometry("800x600")
 
         self.text = ScrolledText(self.root, font=("Arial", 14), wrap=tk.WORD, width=100, height=20)
         self.text.bind("<KeyRelease>", self.spell_check)
@@ -40,7 +37,6 @@ class SpellCheck:
                     position = content.find(word)
                     self.text.tag_add(word, f"1.{position}", f"1.{position + len(word)}")
                     self.text.tag_config(word, foreground="red")
-
 
 if __name__ == "__main__":
     SpellCheck()
