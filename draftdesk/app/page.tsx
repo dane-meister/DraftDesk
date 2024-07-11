@@ -1,17 +1,36 @@
-'use client'
-import Header from "@/components/Header";
-import TextEditor from "@/components/TextEditor";
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useState } from 'react';
+import Header from '@/components/Header';
+import TextEditor from '@/components/TextEditor';
+import Homepage from '@/components/HomePage';
+
+const Home: React.FC = () => {
+  const [showTextEditor, setShowTextEditor] = useState(false);
+
+  const handleNewProject = () => {
+    setShowTextEditor(true);
+  };
+
   return (
-    <main className='relative'>
+    <main className="relative">
       <div>
-        <Header onFontChange={function (font: string): void {
-          throw new Error("Function not implemented.");
-        } } />
-        <TextEditor />
+        {showTextEditor ? (
+          <>
+            <Header
+              onFontChange={(font: string) => {
+                console.log(`Font changed to ${font}`);
+              }}
+            />
+            <TextEditor />
+          </>
+        ) : (
+          <Homepage onNewProject={handleNewProject} />
+        )}
       </div>
     </main>
   );
-}
+};
+
+export default Home;
+
