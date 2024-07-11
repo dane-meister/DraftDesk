@@ -3,13 +3,13 @@
 import { useState } from 'react';
 import { SaveOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import { Modal, Button, Input } from 'antd';
+import Header from './Header';
 
 const { TextArea } = Input;
 
 const TextEditor: React.FC = () => {
     const [text, setText] = useState('');
-    const [wordList] = useState(new Set<string>());
-    const [oldSpaces, setOldSpaces] = useState<number>(0);
+    const [font, setFont] = useState('Arial');
     const [modalVisible, setModalVisible] = useState<boolean>(false);
 
     const save = () => {
@@ -28,27 +28,22 @@ const TextEditor: React.FC = () => {
     
         // Clear previous tags
         // Implement your spell check logic here
-        setOldSpaces(spaceCount);
     };
 
     return (
-        <div className="flex h-screen">
-            <div className="m-auto w-3/5">
-                <TextArea
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                    autoSize={{ minRows: 20 }}
-                    className="border p-2 w-full"
-                    onKeyUp={spellCheck}
-                />
-
-                <div className="mt-2 flex justify-between">
-                    <Button type="primary" icon={<SaveOutlined />} onClick={save}>
-                        Save
-                    </Button>
-                    <Button type="primary" icon={<FolderOpenOutlined />} onClick={open}>
-                        Open
-                    </Button>
+        <div className="flex flex-col h-screen">
+            <Header onFontChange={setFont} />
+            <div className="flex-1 bg-gray-100 p-4 mt-16">
+                <div className="overflow-y-auto h-96 rounded-lg bg-white p-4">
+                    <TextArea
+                        spellCheck="false" // Disable browser's spell check
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                        autoSize={{ minRows: 20 }}
+                        className="w-full outline-none resize-none"
+                        style={{ fontFamily: font }}
+                        onKeyUp={spellCheck}
+                    />
                 </div>
             </div>
 
