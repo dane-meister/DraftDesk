@@ -27,15 +27,6 @@ const Homepage: React.FC<HomepageProps> = ({ onNewProject }) => {
                         <span className="mt-2">New Project</span>
                     </div>
                 </Button>
-                <Button
-                    onClick={handleOpenFile}
-                    className="flex items-center justify-center w-40 h-40 bg-white border-2 border-gray-300 rounded-lg shadow-lg"
-                >
-                    <div className="flex flex-col items-center">
-                        <FolderOpenOutlined style={{ fontSize: '24px', visibility: 'visible' }} />
-                        <span className="mt-2">Open File</span>
-                    </div>
-                </Button>
             </div>
         </div>
     );

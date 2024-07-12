@@ -2,15 +2,20 @@
   "name": "draftdesk",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "startn": "ts-node ./server/index.ts"
   },
   "dependencies": {
     "@types/antd": "^1.0.0",
     "antd": "^5.19.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.5.0",
     "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18",
@@ -26,6 +31,7 @@
     "node-loader": "^2.0.0",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.3"
   }
 }
