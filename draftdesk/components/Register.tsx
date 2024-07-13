@@ -5,23 +5,19 @@ import { setToken } from '@/utils/auth';
 
 const { Title } = Typography;
 
-interface LandingPageProps {
-  onLogin: () => void; // Assuming you have a callback function for successful login
+interface RegisterProps {
+    onLogin: () => void;
+    onLoginClicked: () => void;
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ onLogin }) => {
-  const [isLogin, setIsLogin] = useState(true);
-
-  const toggleForm = () => {
-    setIsLogin(!isLogin);
-  };
+const Register: React.FC<RegisterProps> = ({ onLoginClicked, onLogin }) => {
 
   const handleSubmit = async (values: any) => {
-    const url = isLogin ? 'http://localhost:5000/login' : 'http://localhost:5000/register'; 
+    const url = 'http://localhost:5000/register'; 
     try {
       const response = await axios.post(url, values);
       if (response.status === 201 || response.status === 200) {
-        message.success(isLogin ? 'Logged in successfully!' : 'Account created successfully!');
+        message.success('Account created successfully!');
         console.log(response.data);
         setToken(response.data.token); // Save the token to local storage
         onLogin(); // Call the onLogin callback function
@@ -45,25 +41,23 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin }) => {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-      <Title level={2}>{isLogin ? 'Log In' : 'Create Account'}</Title>
+      <Title level={2}>{'Create Account'}</Title>
       <Form
         name="authForm"
         onFinish={handleSubmit}
         className="w-full max-w-xs mt-4"
       >
-        {!isLogin && (
-          <Form.Item
+        <Form.Item
             name="penName"
             rules={[{ required: true, message: 'Please input your Pen Name!' }]}
-          >
+        >
             <Input placeholder="Pen Name" />
-          </Form.Item>
-        )}
+        </Form.Item>
         <Form.Item
           name="email"
           rules={[{ required: true, message: 'Please input your email!' }]}
         >
-          <Input placeholder="Email" />
+            <Input placeholder="Email" />
         </Form.Item>
         <Form.Item
           name="password"
@@ -73,15 +67,15 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin }) => {
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" className="w-full">
-            {isLogin ? 'Log In' : 'Create Account'}
+            {'Create Account'}
           </Button>
         </Form.Item>
       </Form>
-      <Button type="link" onClick={toggleForm}>
-        {isLogin ? 'Create Account' : 'Log In'}
+      <Button type="link" onClick={onLoginClicked}>
+        {'Log In'}
       </Button>
     </div>
   );
 };
 
-export default LandingPage;
+export default Register;

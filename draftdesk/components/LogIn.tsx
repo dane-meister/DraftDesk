@@ -5,23 +5,19 @@ import { setToken } from '@/utils/auth';
 
 const { Title } = Typography;
 
-interface LandingPageProps {
-  onLogin: () => void; // Assuming you have a callback function for successful login
+interface LogInProps {
+    onLogin: () => void; 
+    createAccountClicked: () => void;
 }
 
-const LandingPage: React.FC<LandingPageProps> = ({ onLogin }) => {
-  const [isLogin, setIsLogin] = useState(true);
-
-  const toggleForm = () => {
-    setIsLogin(!isLogin);
-  };
+const LogIn: React.FC<LogInProps> = ({ onLogin, createAccountClicked }) => {
 
   const handleSubmit = async (values: any) => {
-    const url = isLogin ? 'http://localhost:5000/login' : 'http://localhost:5000/register'; 
+    const url = 'http://localhost:5000/login';
     try {
       const response = await axios.post(url, values);
       if (response.status === 201 || response.status === 200) {
-        message.success(isLogin ? 'Logged in successfully!' : 'Account created successfully!');
+        message.success('Logged in successfully!');
         console.log(response.data);
         setToken(response.data.token); // Save the token to local storage
         onLogin(); // Call the onLogin callback function
@@ -45,20 +41,12 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin }) => {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-      <Title level={2}>{isLogin ? 'Log In' : 'Create Account'}</Title>
+      <Title level={2}>{'Log In'}</Title>
       <Form
         name="authForm"
         onFinish={handleSubmit}
         className="w-full max-w-xs mt-4"
       >
-        {!isLogin && (
-          <Form.Item
-            name="penName"
-            rules={[{ required: true, message: 'Please input your Pen Name!' }]}
-          >
-            <Input placeholder="Pen Name" />
-          </Form.Item>
-        )}
         <Form.Item
           name="email"
           rules={[{ required: true, message: 'Please input your email!' }]}
@@ -73,15 +61,15 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin }) => {
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" className="w-full">
-            {isLogin ? 'Log In' : 'Create Account'}
+            {'Log In'}
           </Button>
         </Form.Item>
       </Form>
-      <Button type="link" onClick={toggleForm}>
-        {isLogin ? 'Create Account' : 'Log In'}
+      <Button type="link" onClick={createAccountClicked}>
+        {'Create Account'}
       </Button>
     </div>
   );
 };
 
-export default LandingPage;
+export default LogIn;

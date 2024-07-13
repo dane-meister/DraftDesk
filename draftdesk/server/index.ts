@@ -6,6 +6,7 @@ import cookieparser from 'cookie-parser';
 import path, { parse } from 'path';
 import helmet from 'helmet';
 import { register, login, logout, validateRegister, limiter } from './controllers/authController';
+import { authenticateToken } from './middleware/authenticateToken';
 
 // Import models
 import User from './models/Users';
@@ -39,6 +40,7 @@ app.get('/', (req, res) => {
 app.post('/register', limiter, validateRegister, register);
 app.post('/login', login);
 app.post('/logout', logout);
+app.get('/authToken', authenticateToken)
 
 
 app.listen(PORT, () => {

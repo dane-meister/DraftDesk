@@ -5,51 +5,44 @@ import Header from '@/components/Header';
 import TextEditor from '@/components/TextEditor';
 import Homepage from '@/components/HomePage';
 import LandingPage from '@/components/LandingPage';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
+import { setToken, getToken, removeToken } from '@/utils/auth';
 
 const Home: React.FC = () => {
+  const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showTextEditor, setShowTextEditor] = useState(false);
 
+  // Check if user is authenticated
   useEffect(() => {
-    // Check if the user is authenticated by checking for a token
-    const token = localStorage.getItem('token');
+    const token = getToken();
     setIsAuthenticated(!!token);
   }, []);
 
-  const handleNewProject = () => {
-    
-  };
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push('/log-in');
+    }
+  }, [isAuthenticated, router]);
 
-  const handleLogin = () => {
-    // Handle login logic and set the user as authenticated
-    setIsAuthenticated(true);
-  };
-
-  const handleLogout = () => {
-    // Handle logout logic and set the user as not authenticated
-    localStorage.removeItem('token');
-    setIsAuthenticated(false);
+  const handleLogout = async () => {
+    try {
+      await axios.post('http://localhost:5000/logout', {}, { withCredentials: true });
+      removeToken();
+      setIsAuthenticated(false);
+      setShowTextEditor(false);
+    } catch (error) {
+      console.error('Logout failed', error);
+    }
   };
 
   return (
     <main className="relative">
       <div>
-        {!isAuthenticated ? (
-          <LandingPage onLogin={handleLogin} />
-        ) : (
-          showTextEditor ? (
-            <>
-              <Header
-                onFontChange={(font: string) => {
-                  console.log(`Font changed to ${font}`);
-                }}
-              />
-              <TextEditor />
-            </>
-          ) : (
-            <Homepage onNewProject={handleNewProject} onLogout={handleLogout} />
-          )
-        )}
+        
       </div>
     </main>
   );

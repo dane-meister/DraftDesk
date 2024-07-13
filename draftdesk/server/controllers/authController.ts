@@ -70,10 +70,9 @@ export const login = async (req: Request, res: Response) => {
     const token = jwt.sign({ userId: user._id }, jwtSecret, {
       expiresIn: '1h', // Token expires in 1 hour
     });
-
     res.cookie('token', token, { 
       httpOnly: true, // Prevent cookie from being accessed by client-side scripts
-      secure: process.env.NODE_ENV === 'production', // Set secure to true in production
+      secure: process.env.NODE_ENV === 'production' ? true : false, // Set secure to true in production
       sameSite: 'strict' // Cookie can only be sent in same-site requests
      });
 
@@ -86,10 +85,11 @@ export const login = async (req: Request, res: Response) => {
 
 export const logout = async (req: Request, res: Response) => {
   try {
+    console.log('Logging out', req.cookies);
     // Clear the token cookie
     res.clearCookie('token', {
       httpOnly: true, // Prevent client-side access to the cookie
-      secure: process.env.NODE_ENV === 'production', // Ensure secure is true in production
+      secure: process.env.NODE_ENV === 'production' ? true : false, // Ensure secure is true in production
       sameSite: 'strict', // Mitigate CSRF attacks
     });
 
