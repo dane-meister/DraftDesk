@@ -9,9 +9,6 @@ interface HomepageProps {
 }
 
 const Homepage: React.FC<HomepageProps> = ({ onNewProject, onLogout }) => {
-    const handleOpenFile = () => {
-        // Implement the logic to open an existing file
-    };
 
     return (
         <div className="flex flex-col items-center justify-center h-screen bg-gray-100">

@@ -5,14 +5,14 @@ import dotenv from 'dotenv';
 import cookieparser from 'cookie-parser';
 import path, { parse } from 'path';
 import helmet from 'helmet';
-import { register, login, logout, validateRegister, limiter } from './controllers/authController';
+import { register, login, logout, validateRegister, limiter, verifyToken } from './controllers/authController';
 import { authenticateToken } from './middleware/authenticateToken';
+import { getUserById } from './controllers/userController';
 
-// Import models
-import User from './models/Users';
-import Project from './models/Projects';
-import Chapter from './models/Chapters';
-import Page from './models/Pages';
+
+// Import and register models models
+import { registerModels } from './models';
+registerModels();
 
 // Load environment variables from .env file
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
@@ -30,8 +30,7 @@ app.use(helmet()); // Set security headers
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(express.json());
 app.use(cookieparser());
-
-//GUASHA 
+ 
 app.get('/', (req, res) => {
   res.send('DraftDesk API');
 });
@@ -40,7 +39,11 @@ app.get('/', (req, res) => {
 app.post('/register', limiter, validateRegister, register);
 app.post('/login', login);
 app.post('/logout', logout);
+app.get('/verifyToken', verifyToken);
 app.get('/authToken', authenticateToken)
+
+// User Routes
+app.get('/user', authenticateToken, getUserById);
 
 
 app.listen(PORT, () => {

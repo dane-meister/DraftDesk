@@ -4,6 +4,8 @@ import { removeToken } from '@/utils/auth';
 import axios from 'axios';
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import UserData from '@/components/UserData';
+import withAuth from '@/components/withAuth';
 
 const Projects: React.FC = () => {
     const router = useRouter();
@@ -25,9 +27,10 @@ const Projects: React.FC = () => {
 
     return (
         <div>
+            <UserData />
             <Homepage onNewProject={handleNewProject} onLogout={handleLogout} />
         </div>
   );
 };
 
-export default Projects;
+export default withAuth(Projects);
