@@ -12,6 +12,25 @@ export const limiter = rateLimit({
   message: 'Too many accounts created from this IP, please try again after 15 minutes'
 });
 
+export const verifyToken = (req: Request, res: Response) => {
+  console.log('Verifying token');
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(' ')[1];
+  console.log('Token:', token);
+  
+  if (!token) {
+    return res.status(401).json({ message: 'No token, authorization denied' });
+  }
+
+  try {
+    const jwtSecret = process.env.JWT_SECRET as string;
+    jwt.verify(token, jwtSecret);
+    res.status(200).json({ message: 'Token is valid' });
+  } catch (error) {
+    res.status(401).json({ message: 'Token is not valid' });
+  }
+};
+
 // User input validation
 export const validateRegister = [
   body('email').isEmail().withMessage('Invalid email format'),
@@ -27,7 +46,6 @@ export const register = async (req: Request, res: Response) => {
   }
 
   const { email, password, penName } = req.body;
-  console.log(req.body);
 
   try {
     // Check if user already exists
@@ -40,8 +58,21 @@ export const register = async (req: Request, res: Response) => {
     const hashedPassword = await bcrypt.hash(password, salt);
     // Create a new user
     const newUser = new User({ email: email, password: hashedPassword, penName: penName });
-    await newUser.save();
-    res.status(201).json({ message: 'User registered successfully' });
+    const user = await newUser.save();
+
+    const jwtSecret = process.env.JWT_SECRET as string;
+
+    const token = jwt.sign({ userId: user._id }, jwtSecret, {
+      expiresIn: '1h', // Token expires in 1 hour
+    });
+
+    res.cookie('token', token, { 
+      httpOnly: true, // Prevent cookie from being accessed by client-side scripts
+      secure: process.env.NODE_ENV === 'production' ? true : false, // Set secure to true in production
+      sameSite: 'strict' // Cookie can only be sent in same-site requests
+     });
+
+    res.status(201).json({ message: 'User registered successfully', token });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Failed to register user' });
@@ -85,7 +116,6 @@ export const login = async (req: Request, res: Response) => {
 
 export const logout = async (req: Request, res: Response) => {
   try {
-    console.log('Logging out', req.cookies);
     // Clear the token cookie
     res.clearCookie('token', {
       httpOnly: true, // Prevent client-side access to the cookie

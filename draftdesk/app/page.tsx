@@ -1,43 +1,52 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Header from '@/components/Header';
-import TextEditor from '@/components/TextEditor';
-import Homepage from '@/components/HomePage';
-import LandingPage from '@/components/LandingPage';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { setToken, getToken, removeToken } from '@/utils/auth';
+import withAuth from '@/components/withAuth';
 
 const Home: React.FC = () => {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showTextEditor, setShowTextEditor] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  // Check if user is authenticated
   useEffect(() => {
     const token = getToken();
-    setIsAuthenticated(!!token);
-  }, []);
 
-  // Redirect to login if not authenticated
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.push('/log-in');
-    }
-  }, [isAuthenticated, router]);
+    const checkAuthentication = async () => {
+      if (token) {
+        try {
+          const response = await axios.get('http://localhost:5000/verifyToken', {
+            headers: { Authorization: `Bearer ${token}` }
+          });
 
-  const handleLogout = async () => {
-    try {
-      await axios.post('http://localhost:5000/logout', {}, { withCredentials: true });
-      removeToken();
-      setIsAuthenticated(false);
-      setShowTextEditor(false);
-    } catch (error) {
-      console.error('Logout failed', error);
-    }
-  };
+          if (response.status === 200) {
+            setIsAuthenticated(true);
+          } else {
+            setIsAuthenticated(false);
+            router.push('/log-in');
+          }
+        } catch (error) {
+          setIsAuthenticated(false);
+          router.push('/log-in');
+        }
+      } else {
+        setIsAuthenticated(false);
+        router.push('/log-in');
+      }
+
+      setLoading(false);
+    };
+
+    checkAuthentication();
+  }, [router]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
 
   return (
     <main className="relative">
@@ -48,6 +57,6 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default withAuth(Home);
 
 

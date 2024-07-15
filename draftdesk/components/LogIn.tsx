@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Form, Input, Typography, message } from 'antd';
 import axios from 'axios';
-import { setToken } from '@/utils/auth';
+import { setToken, removeToken } from '@/utils/auth';
+import { useRouter } from 'next/navigation';
 
 const { Title } = Typography;
 
@@ -12,6 +13,9 @@ interface LogInProps {
 
 const LogIn: React.FC<LogInProps> = ({ onLogin, createAccountClicked }) => {
 
+  const router = useRouter();
+
+
   const handleSubmit = async (values: any) => {
     const url = 'http://localhost:5000/login';
     try {
@@ -19,7 +23,7 @@ const LogIn: React.FC<LogInProps> = ({ onLogin, createAccountClicked }) => {
       if (response.status === 201 || response.status === 200) {
         message.success('Logged in successfully!');
         console.log(response.data);
-        setToken(response.data.token); // Save the token to local storage
+        setToken(response.data.token); // Save the token to a cookie
         onLogin(); // Call the onLogin callback function
       }
     } catch (error: any) {
