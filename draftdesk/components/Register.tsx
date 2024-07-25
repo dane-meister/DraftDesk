@@ -18,7 +18,6 @@ const Register: React.FC<RegisterProps> = ({ onLoginClicked, onLogin }) => {
       const response = await axios.post(url, values);
       if (response.status === 201 || response.status === 200) {
         message.success('Account created successfully!');
-        console.log(response.data);
         setToken(response.data.token); // Save the token to local storage
         onLogin(); // Call the onLogin callback function
       }

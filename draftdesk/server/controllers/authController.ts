@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import rateLimit from 'express-rate-limit';
 import { body, validationResult } from 'express-validator';
 import User from '../models/Users'; 
+import next from 'next';
 
 // Rate limiter to prevent brute-force attacks
 export const limiter = rateLimit({
@@ -13,10 +14,8 @@ export const limiter = rateLimit({
 });
 
 export const verifyToken = (req: Request, res: Response) => {
-  console.log('Verifying token');
   const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(' ')[1];
-  console.log('Token:', token);
   
   if (!token) {
     return res.status(401).json({ message: 'No token, authorization denied' });

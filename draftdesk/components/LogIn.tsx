@@ -22,7 +22,6 @@ const LogIn: React.FC<LogInProps> = ({ onLogin, createAccountClicked }) => {
       const response = await axios.post(url, values);
       if (response.status === 201 || response.status === 200) {
         message.success('Logged in successfully!');
-        console.log(response.data);
         setToken(response.data.token); // Save the token to a cookie
         onLogin(); // Call the onLogin callback function
       }

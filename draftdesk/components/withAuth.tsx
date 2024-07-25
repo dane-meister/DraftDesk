@@ -13,7 +13,6 @@ const withAuth = (WrappedComponent: React.FC) => {
       const token = getToken();
 
       const checkAuthentication = async () => {
-        console.log("Auth token", token);
         if (token) {
           try {
             const response = await axios.get('http://localhost:5000/verifyToken', {

@@ -5,7 +5,7 @@ import HomeHeader from './HomeHeader'; // Adjust the path based on your project 
 
 interface HomepageProps {
     onNewProject: () => void;
-    onLogout: () => void; // Define the logout handler
+    onLogout: () => void; 
 }
 
 const Homepage: React.FC<HomepageProps> = ({ onNewProject, onLogout }) => {

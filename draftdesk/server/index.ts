@@ -8,10 +8,12 @@ import helmet from 'helmet';
 import { register, login, logout, validateRegister, limiter, verifyToken } from './controllers/authController';
 import { authenticateToken } from './middleware/authenticateToken';
 import { getUserById } from './controllers/userController';
+import { createProject } from './controllers/projectController';
 
 
 // Import and register models models
 import { registerModels } from './models';
+import { validateProjectFields } from './middleware/validators';
 registerModels();
 
 // Load environment variables from .env file
@@ -44,6 +46,9 @@ app.get('/authToken', authenticateToken)
 
 // User Routes
 app.get('/user', authenticateToken, getUserById);
+
+// Project Routes
+app.post('/projects', authenticateToken, validateProjectFields, createProject);
 
 
 app.listen(PORT, () => {
