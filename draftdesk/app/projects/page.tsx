@@ -19,6 +19,7 @@ const Projects: React.FC = () => {
 
     const handleCreateProject = async (projectData: any) => {
         //const token = getToken();
+        console.log(projectData);
 
         try {
           /*
